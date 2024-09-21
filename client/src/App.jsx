@@ -5,7 +5,7 @@ export default function App() {
   const [data, setData] = useState(undefined)
 
   useEffect(() => {
-    axios.get("http://localhost:3000").then(response => setData(response?.data))
+    axios.get("https://ipadress-p9u4.onrender.com/").then(response => setData(response?.data))
   }, [])
 
 
