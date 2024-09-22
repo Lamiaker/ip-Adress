@@ -1,35 +1,29 @@
 const express = require("express");
-const ipToLocation = require("ip-to-location");
+const geoip = require("geoip-lite");
 const app = express();
 const cors = require("cors");
 
-// Activer CORS pour permettre les requêtes du front-end
 app.use(cors());
 
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
   const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress).split(
     ","
   )[0];
 
-  try {
-    // Utiliser ip-to-location pour obtenir les informations de géolocalisation
-    const locationData = await ipToLocation.fetch(ip);
+  // Utiliser geoip-lite pour obtenir les informations de géolocalisation
+  const locationData = geoip.lookup(ip);
 
-    // Afficher les données de géolocalisation dans la console pour débogage
-    console.log("Location data:", locationData);
-
-    // Envoyer les données de localisation au client
+  if (locationData) {
     res.json({
       ip: ip,
       country: locationData.country,
       region: locationData.region,
       city: locationData.city,
-      lat: locationData.latitude,
-      lon: locationData.longitude,
+      lat: locationData.ll[0],
+      lon: locationData.ll[1],
     });
-  } catch (error) {
-    console.error("Error fetching IP location:", error);
-    res.status(500).send("Error fetching IP location.");
+  } else {
+    res.status(500).send("No location data found for this IP.");
   }
 });
 
