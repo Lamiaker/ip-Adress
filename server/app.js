@@ -1,3 +1,11 @@
+const express = require("express");
+const ipToLocation = require("ip-to-location");
+const app = express();
+const cors = require("cors");
+
+// Activer CORS pour permettre les requêtes du front-end
+app.use(cors());
+
 app.get("/", async (req, res) => {
   const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress).split(
     ","
@@ -23,4 +31,9 @@ app.get("/", async (req, res) => {
     console.error("Error fetching IP location:", error);
     res.status(500).send("Error fetching IP location.");
   }
+});
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
