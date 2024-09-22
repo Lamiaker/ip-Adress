@@ -1,5 +1,5 @@
 const express = require("express");
-const axios = require("axios");
+const ipToLocation = require("ip-to-location");
 const app = express();
 const cors = require("cors");
 
@@ -13,19 +13,17 @@ app.get("/", async (req, res) => {
   )[0];
 
   try {
-    // Appeler l'API de géolocalisation avec l'adresse IP
-    const response = await axios.get(`http://ip-api.com/json/${ip}`);
-    const locationData = response.data;
+    // Utiliser ip-to-location pour obtenir les informations de géolocalisation
+    const locationData = await ipToLocation.fetch(ip);
 
     // Envoyer les données de localisation au client
     res.json({
       ip: ip,
       country: locationData.country,
-      region: locationData.regionName,
+      region: locationData.region,
       city: locationData.city,
-      lat: locationData.lat,
-      lon: locationData.lon,
-      isp: locationData.isp,
+      lat: locationData.latitude,
+      lon: locationData.longitude,
     });
     res.send(locationData);
   } catch (error) {
