@@ -25,7 +25,6 @@ app.get("/", async (req, res) => {
       lat: locationData.latitude,
       lon: locationData.longitude,
     });
-    res.send(locationData);
   } catch (error) {
     console.error("Error fetching IP location:", error);
     res.status(500).send("Error fetching IP location.");
@@ -34,5 +33,5 @@ app.get("/", async (req, res) => {
 
 const port = 3000;
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
